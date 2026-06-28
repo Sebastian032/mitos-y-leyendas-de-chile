@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   # 1. Base de datos NoSQL para tus leyendas
   db:
@@ -20,6 +18,20 @@ services:
       - MONGO_URI=mongodb://db:27017/
     depends_on:
       - db
+    develop:
+      watch:
+        # Sincroniza todo lo que cambies dentro de la carpeta local ./backend 
+        # directamente en la carpeta /app del contenedor
+        - action: sync
+          path: ./backend
+          target: /app
+          ignore:
+            - __pycache__/
+            - .pytest_cache/
+        
+        # Si agregas una librería a requirements.txt, Docker reconstruirá la imagen sola
+        - action: rebuild
+          path: ./backend/requirements.txt
 
   # 3. Frontend en React (Vite + TypeScript)
   frontend:
@@ -33,6 +45,18 @@ services:
     tty: true
     depends_on:
       - backend
+    # ¡ESTE BLOQUE AHORA ESTÁ DENTRO DE FRONTEND!
+    develop:
+      watch:
+        # 1. Sincronizar (Sync): Copia el archivo al contenedor sin reiniciarlo
+        - action: sync
+          path: ./frontend/src
+          target: /app/src
+          ignore:
+            - node_modules/
+        # 2. Reconstruir (Rebuild): Reconstruye la imagen si cambian las dependencias
+        - action: rebuild
+          path: ./frontend/package.json
 
 volumes:
   mongo_data:

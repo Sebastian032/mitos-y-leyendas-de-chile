@@ -3,7 +3,7 @@
 export interface Myth {
   id: string;
   title: string;
-  category: "mito" | "leyenda" | "criatura" | "brujería";
+  category: "mito" | "leyenda" | "criatura" | "brujería" | "deidad" | "espíritu";
   summary: string;
   content: string;
   origin: string;
