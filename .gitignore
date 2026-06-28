@@ -1,0 +1,21 @@
+# Dependencias de Node
+node_modules/
+.pnpm-store/
+
+# Docker y Base de datos local
+data/
+.docker/
+
+# Archivos de entorno y credenciales
+.env
+.env.local
+
+# Producción / Compilación
+dist/
+build/
+
+# Temporales del sistema
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

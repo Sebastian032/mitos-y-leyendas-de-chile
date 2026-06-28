@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  # 1. Base de datos NoSQL para tus leyendas
+  db:
+    image: mongo:latest
+    container_name: leyendas_db
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+
+  # 2. API en Python
+  backend:
+    build: ./backend
+    container_name: leyendas_backend
+    ports:
+      - "8000:8000"
+    environment:
+      - MONGO_URI=mongodb://db:27017/
+    depends_on:
+      - db
+
+  # 3. Frontend en React (Vite + TypeScript)
+  frontend:
+    build: ./frontend
+    container_name: leyendas_frontend
+    ports:
+      - "5173:5173"
+    environment:
+      - VITE_API_URL=http://localhost:8000
+    stdin_open: true
+    tty: true
+    depends_on:
+      - backend
+
+volumes:
+  mongo_data:
